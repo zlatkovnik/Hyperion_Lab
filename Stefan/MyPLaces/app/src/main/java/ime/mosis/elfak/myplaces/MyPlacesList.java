@@ -13,6 +13,7 @@ import androidx.appcompat.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -30,6 +31,9 @@ public class MyPlacesList extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -39,13 +43,21 @@ public class MyPlacesList extends AppCompatActivity {
             }
         });
 
-        places=new ArrayList<String>();
-        places.add("Tvrdjava");
-        places.add("Cair");
-        places.add("Park Svetog Save");
-        places.add("Trg Kralja Milana");
+//        places=new ArrayList<String>();
+//        places.add("Tvrdjava");
+//        places.add("Cair");
+//        places.add("Park Svetog Save");
+//        places.add("Trg Kralja Milana");
         ListView myPlacesList=(ListView)findViewById(R.id.my_places_list_item);
-        myPlacesList.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,places));
+        myPlacesList.setAdapter(new ArrayAdapter<MyPlace>(this, android.R.layout.simple_list_item_1,MyPlacesData.getInstance().getMyPlaces()));
+
+        myPlacesList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                MyPlace place = (MyPlace)adapterView.getAdapter().getItem(i);
+                Toast.makeText(getApplicationContext(),place.getName()+"selected",Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override

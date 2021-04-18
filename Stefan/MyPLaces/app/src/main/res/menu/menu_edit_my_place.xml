@@ -9,12 +9,6 @@
         app:showAsAction="ifRoom"
         android:icon="@drawable/baseline_map_white_24"/>
     <item
-        android:id="@+id/new_place_item"
-        android:orderInCategory="101"
-        android:title="@string/new_place"
-        app:showAsAction="ifRoom"
-        android:icon="@drawable/baseline_add_white_24"/>
-    <item
         android:id="@+id/my_places_list_item"
         android:orderInCategory="102"
         android:title="@string/my_places_list"
@@ -24,6 +18,6 @@
         android:id="@+id/about_item"
         android:orderInCategory="103"
         android:title="@string/about"
-        app:showAsAction="ifRoom"
+        app:showAsAction="never"
         android:icon="@drawable/outline_info_white_24"/>
 </menu>

@@ -10,9 +10,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MyPLaces">
         <activity
+            android:name=".EditMyPlaceActivity"
+            android:label="@string/title_activity_edit_my_place"
+            android:theme="@style/Theme.MyPLaces.NoActionBar"></activity>
+        <activity
             android:name=".MyPlacesList"
             android:label="@string/title_activity_my_places_list"
-            android:theme="@style/Theme.MyPLaces.NoActionBar"></activity>
+            android:theme="@style/Theme.MyPLaces.NoActionBar" />
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
@@ -26,7 +30,7 @@
         <activity
             android:name=".About"
             android:label="About"
-            android:theme="@style/Theme.AppCompat.Light.Dialog"></activity>
+            android:theme="@style/Theme.AppCompat.Light.Dialog" />
     </application>
 
 </manifest>
