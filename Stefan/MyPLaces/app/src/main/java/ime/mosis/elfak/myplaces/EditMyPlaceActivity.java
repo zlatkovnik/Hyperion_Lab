@@ -8,31 +8,78 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.Toast;
 
 public class EditMyPlaceActivity extends AppCompatActivity implements View.OnClickListener{
-
+boolean editMode = true;
+int position =-1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_my_place);
+        try{
+            Intent listIntent=getIntent();
+            Bundle positionBundle= listIntent.getExtras();
+            if(positionBundle != null)
+                position = positionBundle.getInt("position");
+            else
+                editMode=false;
+        }catch (Exception e){
+            editMode = false;
+        }
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        Button finsihedButton =(Button)findViewById(R.id.editmyplace_finished_button);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+        final Button finsihedButton =(Button)findViewById(R.id.editmyplace_finished_button);
         finsihedButton.setOnClickListener(this);
+        finsihedButton.setEnabled(false);
+        finsihedButton.setText("Add");
         Button cancelButton =(Button)findViewById(R.id.editmyplace_cancel_button);
         cancelButton.setOnClickListener(this);
 
+        EditText nameEditText= findViewById(R.id.editmyplace_name_edit);
+        if(!editMode){
+            finsihedButton.setEnabled(false);
+            finsihedButton.setText("Add");
+        }else if( position >=0){
+            finsihedButton.setText("Save");
+            MyPlace place= MyPlacesData.getInstance().getPlace(position);
+            nameEditText.setText(place.getName());
+            EditText descEditText=findViewById(R.id.editmyplace_desc_edit);
+            descEditText.setText(place.getDescription());
+        }
+        nameEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                finsihedButton.setEnabled(s.length()>0);
+            }
+        });
     }
     @Override
     public void onClick(View v) {
@@ -42,8 +89,15 @@ public class EditMyPlaceActivity extends AppCompatActivity implements View.OnCli
                 String name = etName.getText().toString();
                 EditText etDesc = findViewById(R.id.editmyplace_desc_edit);
                 String desc = etDesc.getText().toString();
-                MyPlace place = new MyPlace(name, desc);
-                MyPlacesData.getInstance().addNewPlace(place);
+                if(!editMode){
+                    MyPlace place=new MyPlace(name,desc);
+                    MyPlacesData.getInstance().addNewPlace(place);
+                }else {
+                    MyPlace place=MyPlacesData.getInstance().getPlace(position);
+                    place.setName(name);
+                    place.setDescription(desc);
+                }
+
                 setResult(Activity.RESULT_OK);
                 finish();
                 break;
@@ -75,8 +129,12 @@ public class EditMyPlaceActivity extends AppCompatActivity implements View.OnCli
         }else if(id==R.id.about_item){
             Intent i=new Intent(this,About.class);
             startActivity(i);
+        }else if(id==android.R.id.home){
+            finish();
         }
 
         return super.onOptionsItemSelected(item);
     }
+
+
 }

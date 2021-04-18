@@ -1,5 +1,6 @@
 package ime.mosis.elfak.myplaces;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -7,9 +8,11 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -34,14 +37,15 @@ public class MyPlacesList extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-        FloatingActionButton fab = findViewById(R.id.fab);
+        FloatingActionButton fab= findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+            public void onClick(View v) {
+                Intent i = new Intent(MyPlacesList.this, EditMyPlaceActivity.class);
+                startActivityForResult(i,NEW_PLACE);
             }
         });
+
 
 //        places=new ArrayList<String>();
 //        places.add("Tvrdjava");
@@ -54,11 +58,28 @@ public class MyPlacesList extends AppCompatActivity {
         myPlacesList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                MyPlace place = (MyPlace)adapterView.getAdapter().getItem(i);
-                Toast.makeText(getApplicationContext(),place.getName()+"selected",Toast.LENGTH_SHORT).show();
+                //MyPlace place = (MyPlace)adapterView.getAdapter().getItem(i);
+                //Toast.makeText(getApplicationContext(),place.getName()+"selected",Toast.LENGTH_SHORT).show();
+                Bundle positionBundle=new Bundle();
+                positionBundle.putInt("position",i);
+                Intent intent=new Intent(MyPlacesList.this, ViewMyPlacesActivity.class);
+                intent.putExtras(positionBundle);
+                startActivity(intent);
+
+            }
+        });
+        myPlacesList.setOnCreateContextMenuListener(new View.OnCreateContextMenuListener() {
+            @Override
+            public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+                AdapterView.AdapterContextMenuInfo info= (AdapterView.AdapterContextMenuInfo) menuInfo;
+                MyPlace place= MyPlacesData.getInstance().getPlace(info.position);
+                menu.setHeaderTitle(place.getName());
+                menu.add(0,1,1,"View place");
+                menu.add(0,2,2,"Edit place");
             }
         });
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -66,7 +87,7 @@ public class MyPlacesList extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.menu_my_places_list, menu);
         return true;
     }
-
+    static int NEW_PLACE=1;
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id=item.getItemId();
@@ -75,11 +96,24 @@ public class MyPlacesList extends AppCompatActivity {
             Toast.makeText(this,"Show Map!", Toast.LENGTH_SHORT).show();
         } else if(id==R.id.new_place_item){
             Toast.makeText(this,"New Place!", Toast.LENGTH_SHORT).show();
+            Intent i = new Intent(this, EditMyPlaceActivity.class);
+            startActivityForResult(i, NEW_PLACE);
         } else if(id==R.id.about_item){
 //                Toast.makeText(this,"About!", Toast.LENGTH_SHORT).show();
             Intent i=new Intent(this, About.class);
             startActivity(i);
+        }else if(id==android.R.id.home){
+            finish();
         }
         return super.onOptionsItemSelected(item);
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode== Activity.RESULT_OK){
+            Toast.makeText(this, "New Place added", Toast.LENGTH_SHORT).show();
+            ListView myPlacesList= (ListView) findViewById(R.id.my_places_list_item);
+            myPlacesList.setAdapter(new ArrayAdapter<MyPlace>(this, android.R.layout.simple_list_item_1,MyPlacesData.getInstance().getMyPlaces()));
+        }
     }
 }

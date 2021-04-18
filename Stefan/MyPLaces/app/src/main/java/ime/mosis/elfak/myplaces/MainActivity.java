@@ -16,6 +16,8 @@ import android.view.View;
 
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import java.time.Instant;
@@ -33,8 +35,8 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Intent i = new Intent(MainActivity.this, EditMyPlaceActivity.class);
+                startActivityForResult(i,NEW_PLACE);
             }
         });
     }
@@ -68,19 +70,11 @@ public class MainActivity extends AppCompatActivity {
 //                Toast.makeText(this,"About!", Toast.LENGTH_SHORT).show();
                 Intent i=new Intent(this, About.class);
                 startActivity(i);
-            } else if(id==R.id.home){
-                finish();
             }
 
 
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if(resultCode== Activity.RESULT_OK){
-            Toast.makeText(this, "New Place added", Toast.LENGTH_SHORT).show();
-        }
-    }
+
 }
