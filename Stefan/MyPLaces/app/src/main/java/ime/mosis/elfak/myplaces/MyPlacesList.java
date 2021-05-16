@@ -47,11 +47,7 @@ public class MyPlacesList extends AppCompatActivity {
         });
 
 
-//        places=new ArrayList<String>();
-//        places.add("Tvrdjava");
-//        places.add("Cair");
-//        places.add("Park Svetog Save");
-//        places.add("Trg Kralja Milana");
+
         ListView myPlacesList=(ListView)findViewById(R.id.my_places_list_item);
         myPlacesList.setAdapter(new ArrayAdapter<MyPlace>(this, android.R.layout.simple_list_item_1,MyPlacesData.getInstance().getMyPlaces()));
 
@@ -115,5 +111,25 @@ public class MyPlacesList extends AppCompatActivity {
             ListView myPlacesList= (ListView) findViewById(R.id.my_places_list_item);
             myPlacesList.setAdapter(new ArrayAdapter<MyPlace>(this, android.R.layout.simple_list_item_1,MyPlacesData.getInstance().getMyPlaces()));
         }
+    }
+    @Override
+    public boolean onContextItemSelected(@NonNull MenuItem item) {
+        AdapterView.AdapterContextMenuInfo info= (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+        Bundle positionBundle = new Bundle();
+        positionBundle.putInt("position", info.position);
+        Intent i=null;
+        if(item.getItemId()==1)
+        {
+            i=new Intent(this, ViewMyPlacesActivity.class);
+            i.putExtras(positionBundle);
+            startActivity(i);
+        }
+        else if(item.getItemId()==2)
+        {
+            i=new Intent(this, EditMyPlaceActivity.class);
+            i.putExtras(positionBundle);
+            startActivity(i);
+        }
+        return super.onContextItemSelected(item);
     }
 }

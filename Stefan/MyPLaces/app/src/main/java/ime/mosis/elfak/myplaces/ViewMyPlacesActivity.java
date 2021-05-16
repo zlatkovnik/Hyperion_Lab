@@ -81,24 +81,5 @@ public class ViewMyPlacesActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public boolean onContextItemSelected(@NonNull MenuItem item) {
-        AdapterView.AdapterContextMenuInfo info= (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-        Bundle positionBundle = new Bundle();
-        positionBundle.putInt("position", info.position);
-        Intent i=null;
-        if(item.getItemId()==1)
-        {
-            i=new Intent(this, ViewMyPlacesActivity.class);
-            i.putExtras(positionBundle);
-            startActivity(i);
-        }
-        else if(item.getItemId()==2)
-        {
-            i=new Intent(this, ViewMyPlacesActivity.class);
-            i.putExtras(positionBundle);
-            startActivity(i);
-        }
-        return super.onContextItemSelected(item);
-    }
+
 }
