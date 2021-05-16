@@ -23,21 +23,22 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
-public class EditMyPlaceActivity extends AppCompatActivity implements View.OnClickListener{
-boolean editMode = true;
-int position =-1;
+public class EditMyPlaceActivity extends AppCompatActivity implements View.OnClickListener {
+    boolean editMode = true;
+    int position = -1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_my_place);
-        try{
-            Intent listIntent=getIntent();
-            Bundle positionBundle= listIntent.getExtras();
-            if(positionBundle != null)
+        try {
+            Intent listIntent = getIntent();
+            Bundle positionBundle = listIntent.getExtras();
+            if (positionBundle != null)
                 position = positionBundle.getInt("position");
             else
-                editMode=false;
-        }catch (Exception e){
+                editMode = false;
+        } catch (Exception e) {
             editMode = false;
         }
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -46,22 +47,22 @@ int position =-1;
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-        final Button finsihedButton =(Button)findViewById(R.id.editmyplace_finished_button);
-        finsihedButton.setOnClickListener(this);
-        finsihedButton.setEnabled(false);
-        finsihedButton.setText("Add");
-        Button cancelButton =(Button)findViewById(R.id.editmyplace_cancel_button);
+        final Button finishedButton = (Button) findViewById(R.id.editmyplace_finished_button);
+        finishedButton.setOnClickListener(this);
+        finishedButton.setEnabled(false);
+        finishedButton.setText("Add");
+        Button cancelButton = (Button) findViewById(R.id.editmyplace_cancel_button);
         cancelButton.setOnClickListener(this);
 
-        EditText nameEditText= findViewById(R.id.editmyplace_name_edit);
-        if(!editMode){
-            finsihedButton.setEnabled(false);
-            finsihedButton.setText("Add");
-        }else if( position >=0){
-            finsihedButton.setText("Save");
-            MyPlace place= MyPlacesData.getInstance().getPlace(position);
+        EditText nameEditText = findViewById(R.id.editmyplace_name_edit);
+        if (!editMode) {
+            finishedButton.setEnabled(false);
+            finishedButton.setText("Add");
+        } else if (position >= 0) {
+            finishedButton.setText("Save");
+            MyPlace place = MyPlacesData.getInstance().getPlace(position);
             nameEditText.setText(place.getName());
-            EditText descEditText=findViewById(R.id.editmyplace_desc_edit);
+            EditText descEditText = findViewById(R.id.editmyplace_desc_edit);
             descEditText.setText(place.getDescription());
         }
         nameEditText.addTextChangedListener(new TextWatcher() {
@@ -77,25 +78,36 @@ int position =-1;
 
             @Override
             public void afterTextChanged(Editable s) {
-                finsihedButton.setEnabled(s.length()>0);
+                finishedButton.setEnabled(s.length() > 0);
             }
         });
+        Button locationButton =(Button)findViewById(R.id.editmyplace_location_button);
+        locationButton.setOnClickListener(this);
     }
+
     @Override
     public void onClick(View v) {
-        switch(v.getId()){
+        switch (v.getId()) {
             case R.id.editmyplace_finished_button: {
                 EditText etName = findViewById(R.id.editmyplace_name_edit);
                 String name = etName.getText().toString();
                 EditText etDesc = findViewById(R.id.editmyplace_desc_edit);
                 String desc = etDesc.getText().toString();
-                if(!editMode){
-                    MyPlace place=new MyPlace(name,desc);
+                EditText latEdit= (EditText)findViewById(R.id.editmyplace_lat_edit);
+                String lat=latEdit.getText().toString();
+                EditText lonEdit=(EditText)findViewById(R.id.editmyplace_lon_edit);
+                String lon=lonEdit.getText().toString();
+                if (!editMode) {
+                    MyPlace place = new MyPlace(name, desc);
+                    place.setLatitude(lat);
+                    place.setLongitude(lon);
                     MyPlacesData.getInstance().addNewPlace(place);
-                }else {
-                    MyPlace place=MyPlacesData.getInstance().getPlace(position);
+                } else {
+                    MyPlace place = MyPlacesData.getInstance().getPlace(position);
                     place.setName(name);
                     place.setDescription(desc);
+                    place.setLatitude(lat);
+                    place.setLongitude(lon);
                 }
 
                 setResult(Activity.RESULT_OK);
@@ -107,8 +119,13 @@ int position =-1;
                 finish();
                 break;
             }
+            case R.id.editmyplace_location_button:{
+                Intent i = new Intent(this, MyPlacesMapsActivity.class);
+                startActivityForResult(i,1);
+            }
         }
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -120,21 +137,37 @@ int position =-1;
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
 
-        if(id==R.id.show_map_item)
-        {
+        if (id == R.id.show_map_item) {
             Toast.makeText(this, "Show Map!", Toast.LENGTH_SHORT).show();
-        }else if(id==R.id.my_places_list_item){
-            Intent i=new Intent(this, MyPlacesList.class);
+        } else if (id == R.id.my_places_list_item) {
+            Intent i = new Intent(this, MyPlacesList.class);
             startActivity(i);
-        }else if(id==R.id.about_item){
-            Intent i=new Intent(this,About.class);
+        } else if (id == R.id.about_item) {
+            Intent i = new Intent(this, About.class);
             startActivity(i);
-        }else if(id==android.R.id.home){
+        } else if (id == android.R.id.home) {
             finish();
         }
 
         return super.onOptionsItemSelected(item);
     }
 
-
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        try{
+            if(resultCode== Activity.RESULT_OK)
+            {
+                String lon=data.getExtras().getString("lon");
+                EditText lonText=(EditText)findViewById(R.id.editmyplace_lon_edit);
+                lonText.setText(lon);
+                String lat =data.getExtras().getString("lat");
+                EditText latText=(EditText)findViewById(R.id.editmyplace_lat_edit);
+                latText.setText(lat);
+            }
+        }
+        catch (Exception e){
+            //Todo: handle exception
+        }
+    }
 }

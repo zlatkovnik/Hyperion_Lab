@@ -81,5 +81,4 @@ public class ViewMyPlacesActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-
 }
