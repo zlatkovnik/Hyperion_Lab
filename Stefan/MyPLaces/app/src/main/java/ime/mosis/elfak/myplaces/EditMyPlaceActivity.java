@@ -121,6 +121,7 @@ public class EditMyPlaceActivity extends AppCompatActivity implements View.OnCli
             }
             case R.id.editmyplace_location_button:{
                 Intent i = new Intent(this, MyPlacesMapsActivity.class);
+                i.putExtra("state", MyPlacesMapsActivity.SELECT_COORDINATES);
                 startActivityForResult(i,1);
             }
         }
@@ -138,7 +139,9 @@ public class EditMyPlaceActivity extends AppCompatActivity implements View.OnCli
         int id = item.getItemId();
 
         if (id == R.id.show_map_item) {
-            Toast.makeText(this, "Show Map!", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(this, "Show Map!", Toast.LENGTH_SHORT).show();
+            Intent i = new Intent(this, MyPlacesMapsActivity.class);
+            i.putExtra("state", MyPlacesMapsActivity.SHOW_MAP);
         } else if (id == R.id.my_places_list_item) {
             Intent i = new Intent(this, MyPlacesList.class);
             startActivity(i);

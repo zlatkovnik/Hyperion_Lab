@@ -17,6 +17,13 @@ public class MyPlace {
         this.description = description;
     }
 
+    public MyPlace(String name, String description, String longitude, String latitude) {
+        this.name = name;
+        this.description = description;
+        this.longitude = longitude;
+        this.latitude = latitude;
+    }
+
     public String getName() {
         return name;
     }

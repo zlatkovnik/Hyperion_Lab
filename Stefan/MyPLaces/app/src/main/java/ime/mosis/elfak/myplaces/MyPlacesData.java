@@ -12,11 +12,11 @@ public class MyPlacesData {
     private MyPlacesData() {
 
         myPlaces= new ArrayList<MyPlace>();
-        myPlaces.add(new MyPlace("Place A"));
-        myPlaces.add(new MyPlace("Place B"));
-        myPlaces.add(new MyPlace("Place C"));
-        myPlaces.add(new MyPlace("Place D"));
-        myPlaces.add(new MyPlace("Place E"));
+        myPlaces.add(new MyPlace("Place A", "Opis A", "1", "1"));
+        myPlaces.add(new MyPlace("Place B", "Opis B", "2", "1"));
+        myPlaces.add(new MyPlace("Place C", "Opis C", "3", "1"));
+        myPlaces.add(new MyPlace("Place D", "Opis D", "4", "1"));
+        myPlaces.add(new MyPlace("Place E", "Opis #", "5", "1"));
     }
 
     public static MyPlacesData getInstance(){
