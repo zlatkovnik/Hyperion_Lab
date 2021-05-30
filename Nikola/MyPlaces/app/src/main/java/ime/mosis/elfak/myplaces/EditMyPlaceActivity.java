@@ -61,9 +61,9 @@ public class EditMyPlaceActivity extends AppCompatActivity implements View.OnCli
         } else if (position >= 0) {
             finishedButton.setText("Save");
             MyPlace place = MyPlacesData.getInstance().getPlace(position);
-            nameEditText.setText(place.getName());
+            nameEditText.setText(place.name);
             EditText descEditText = findViewById(R.id.editmyplace_desc_edit);
-            descEditText.setText(place.getDescription());
+            descEditText.setText(place.description);
         }
         nameEditText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -81,6 +81,8 @@ public class EditMyPlaceActivity extends AppCompatActivity implements View.OnCli
                 finishedButton.setEnabled(s.length() > 0);
             }
         });
+        Button locationButton =(Button)findViewById(R.id.editmyplace_location_button);
+        locationButton.setOnClickListener(this);
     }
 
     @Override
@@ -91,13 +93,17 @@ public class EditMyPlaceActivity extends AppCompatActivity implements View.OnCli
                 String name = etName.getText().toString();
                 EditText etDesc = findViewById(R.id.editmyplace_desc_edit);
                 String desc = etDesc.getText().toString();
+                EditText latEdit= (EditText)findViewById(R.id.editmyplace_lat_edit);
+                String lat=latEdit.getText().toString();
+                EditText lonEdit=(EditText)findViewById(R.id.editmyplace_lon_edit);
+                String lon=lonEdit.getText().toString();
                 if (!editMode) {
                     MyPlace place = new MyPlace(name, desc);
+                    place.latitude = lat;
+                    place.longitude = lon;
                     MyPlacesData.getInstance().addNewPlace(place);
                 } else {
-                    MyPlace place = MyPlacesData.getInstance().getPlace(position);
-                    place.setName(name);
-                    place.setDescription(desc);
+                    MyPlacesData.getInstance().updatePlace(position, name, desc, lon, lat);
                 }
 
                 setResult(Activity.RESULT_OK);
@@ -108,6 +114,11 @@ public class EditMyPlaceActivity extends AppCompatActivity implements View.OnCli
                 setResult(Activity.RESULT_CANCELED);
                 finish();
                 break;
+            }
+            case R.id.editmyplace_location_button:{
+                Intent i = new Intent(this, MyPlacesMapsActivity.class);
+                i.putExtra("state", MyPlacesMapsActivity.SELECT_COORDINATES);
+                startActivityForResult(i,1);
             }
         }
     }
@@ -124,7 +135,9 @@ public class EditMyPlaceActivity extends AppCompatActivity implements View.OnCli
         int id = item.getItemId();
 
         if (id == R.id.show_map_item) {
-            Toast.makeText(this, "Show Map!", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(this, "Show Map!", Toast.LENGTH_SHORT).show();
+            Intent i = new Intent(this, MyPlacesMapsActivity.class);
+            i.putExtra("state", MyPlacesMapsActivity.SHOW_MAP);
         } else if (id == R.id.my_places_list_item) {
             Intent i = new Intent(this, MyPlacesList.class);
             startActivity(i);
@@ -138,4 +151,22 @@ public class EditMyPlaceActivity extends AppCompatActivity implements View.OnCli
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        try{
+            if(resultCode== Activity.RESULT_OK)
+            {
+                String lon=data.getExtras().getString("lon");
+                EditText lonText=(EditText)findViewById(R.id.editmyplace_lon_edit);
+                lonText.setText(lon);
+                String lat =data.getExtras().getString("lat");
+                EditText latText=(EditText)findViewById(R.id.editmyplace_lat_edit);
+                latText.setText(lat);
+            }
+        }
+        catch (Exception e){
+            //Todo: handle exception
+        }
+    }
 }

@@ -1,8 +1,19 @@
 package ime.mosis.elfak.myplaces;
 
+import com.google.firebase.database.Exclude;
+import com.google.firebase.database.IgnoreExtraProperties;
+
+@IgnoreExtraProperties
 public class MyPlace {
-    private String name;
-    private String description;
+    public String name;
+    public String description;
+    public String longitude;
+    public String latitude;
+    @Exclude
+    public String key;
+
+    public MyPlace() {
+    }
 
     public MyPlace(String name) {
         this.name = name;
@@ -14,20 +25,11 @@ public class MyPlace {
         this.description = description;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setName(String name) {
+    public MyPlace(String name, String description, String longitude, String latitude) {
         this.name = name;
-    }
-
-    public void setDescription(String description) {
         this.description = description;
+        this.longitude = longitude;
+        this.latitude = latitude;
     }
 
     @Override

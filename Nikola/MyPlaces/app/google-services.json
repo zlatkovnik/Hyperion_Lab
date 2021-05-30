@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "523217818016",
+    "firebase_url": "https://my-places-cc8ae-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "my-places-cc8ae",
+    "storage_bucket": "my-places-cc8ae.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:523217818016:android:2fd3229780e0ab1c1d54c5",
+        "android_client_info": {
+          "package_name": "ime.mosis.elfak.myplaces"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "523217818016-66qclctvpbakqp59es78809k505os08a.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBuam7yXfDxKwwxVn1AfI1z-92lnXnYgkE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "523217818016-66qclctvpbakqp59es78809k505os08a.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

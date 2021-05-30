@@ -41,9 +41,9 @@ public class ViewMyPlacesActivity extends AppCompatActivity {
         {
             MyPlace place=MyPlacesData.getInstance().getPlace(position);
             TextView twName=findViewById(R.id.viewmyplace_name_text);
-            twName.setText(place.getName());
+            twName.setText(place.name);
             TextView twDesc= findViewById(R.id.viewmyplace_desc_text);
-            twDesc.setText(place.getDescription());
+            twDesc.setText(place.description);
         }
         final Button finishedButton= findViewById(R.id.viewmyplace_finished_button);
         finishedButton.setOnClickListener(v -> finish());
@@ -61,7 +61,10 @@ public class ViewMyPlacesActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         if(id==R.id.show_map_item){
-            Toast.makeText(this,"Show Map!", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(this,"Show Map!", Toast.LENGTH_SHORT).show();
+            Intent i = new Intent(this, MyPlacesMapsActivity.class);
+            i.putExtra("state", MyPlacesMapsActivity.SHOW_MAP);
+            startActivity(i);
         } else if(id==R.id.new_place_item){
             Toast.makeText(this,"New Place!", Toast.LENGTH_SHORT).show();
             Intent i = new Intent(this, EditMyPlaceActivity.class);
